@@ -184,3 +184,5 @@ It was a surprise to me that the frost hazard image was classified wrong, since 
 
 I had a lot of fun seeing the model's feature maps, since it offered a kind of insight into
 how the model makes its predictions.
+
+Thank you again for reviewing my project!
