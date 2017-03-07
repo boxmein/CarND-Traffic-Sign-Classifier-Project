@@ -159,36 +159,28 @@ plaque under it confusing the model's predictions based on shape.
 
 #### 2. Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. Identify where in your code predictions were made. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the "Stand Out Suggestions" part of the rubric).
 
+Discussed in the next section.
+
+#### 3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction and identify where in your code softmax probabilities were outputted. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)
+
 The prediction code is run under "Predict the Sign Type for Each Image", by running
 the same network with data loaded from file.
 
 The predictions were made on each image and the results are shown below. The model has
 correct results and has very high confidence for each of the sign types.
 
-| Image			        |     Prediction	        					|
+| Image                 |     Prediction	                              |
 |:---------------------:|:---------------------------------------------:|
-| Stop Sign      		| Stop sign   									|
-| U-turn     			| U-turn 										|
-| Yield					| Yield											|
-| 100 km/h	      		| Bumpy Road					 				|
-| Slippery Road			| Slippery Road      							|
+| Stop Sign 1           | 14 (Stop sign) - 100% confidence              |
+| Stop Sign 2           | 14 (Stop sign) - 100% confidence              |
+| Alert Sign/General H. | 18 (General hazard) - 99.9998% confidence     |
+| Frost Hazard          | 11 (Right-of-way at next..) - 99.9999% conf.  |
+| No Parking and <-     | 6  (end of speed limit) - 43.53% confidence   |
+ 
+The model was able to correctly guess 3 of the 5 traffic signs, which gives an accuracy of 60%. This is lower than the accuracy on the validation set, worse than desired. It seems the model's accuracy depends heavily on the quality of the images and any additional markings inside the model.
+
+It was a surprise to me that the frost hazard image was classified wrong, since it is a very clear front-facing image.
 
 
-The model was able to correctly guess 4 of the 5 traffic signs, which gives an accuracy of 80%. This compares favorably to the accuracy on the test set of ...
-
-#### 3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction and identify where in your code softmax probabilities were outputted. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)
-
-The code for making predictions on my final model is located in the 11th cell of the Ipython notebook.
-
-For the first image, the model is relatively sure that this is a stop sign (probability of 0.6), and the image does contain a stop sign. The top five soft max probabilities were
-
-| Probability         	|     Prediction	        					|
-|:---------------------:|:---------------------------------------------:|
-| .60         			| Stop sign   									|
-| .20     				| U-turn 										|
-| .05					| Yield											|
-| .04	      			| Bumpy Road					 				|
-| .01				    | Slippery Road      							|
-
-
-For the second image ...
+I had a lot of fun seeing the model's feature maps, since it offered a kind of insight into
+how the model makes its predictions.
