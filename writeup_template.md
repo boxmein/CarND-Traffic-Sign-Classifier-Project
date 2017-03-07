@@ -1,4 +1,4 @@
-#**Traffic Sign Recognition** 
+#**Traffic Sign Recognition**
 
 ##Writeup Template
 
@@ -15,18 +15,6 @@ The goals / steps of this project are the following:
 * Use the model to make predictions on new images
 * Analyze the softmax probabilities of the new images
 * Summarize the results with a written report
-
-
-[//]: # (Image References)
-
-[image1]: ./examples/visualization.jpg "Visualization"
-[image2]: ./examples/grayscale.jpg "Grayscaling"
-[image3]: ./examples/random_noise.jpg "Random Noise"
-[image4]: ./examples/placeholder.png "Traffic Sign 1"
-[image5]: ./examples/placeholder.png "Traffic Sign 2"
-[image6]: ./examples/placeholder.png "Traffic Sign 3"
-[image7]: ./examples/placeholder.png "Traffic Sign 4"
-[image8]: ./examples/placeholder.png "Traffic Sign 5"
 
 ## Rubric
 
@@ -63,7 +51,13 @@ Some simple python and Numpy functions were used to calculate statistics.
 
 The exploratory visualization includes a histogram showing the frequency of each class in the training set. It also shows a random sample of an image in the training set, just to know what we're dealing with.
 
-![alt text][image1]
+Histogram of street sign class representation in the dataset.
+
+![alt text](HistogramImageFrequency.png)
+
+Random "50 km/h" sign from the dataset
+
+![alt text](Random50SpeedSign.png)
 
 ### Design and Test a Model Architecture
 
@@ -73,32 +67,33 @@ My preprocessing code normalizes the image data to have every pixel value betwee
 
 I preprocessed the classes to convert them to one-hot encoding, using a simple Numpy function from Stack Overflow. Sadly I haven't worked too much with Numpy so a preimplementation was the better way out here.
 
-![alt text][image2]
-
 #### 2. Describe how, and identify where in your code, you set up training, validation and testing data. How much data was in each set? Explain what techniques were used to split the data into these sets. (OPTIONAL: As described in the "Stand Out Suggestions" part of the rubric, if you generated additional data for training, describe why you decided to generate additional data, how you generated the data, identify where in your code, and provide example images of the additional data)
 
 I set up the data by importing it from the existing pickle files. The dataset sizes were 34799 for original training data, 4410 for original validation data and 12630 for original testing data.
 
-The cross validation function I used simply used the entire validation set for every epoch. No splitting was needed if I used the 
+The cross validation function I used simply used the entire validation set for every epoch. No splitting was needed if I used the
 presplit dataset.
 
-I augmented the training data by creating 7 images per test image, with random alterations to the luminance. The luminance augmentation source has been taken from a different project, with changes to fit in my current solution, and has been linked in the respective code cell. 
+I augmented the training data by creating 7 images per test image, with random alterations to the luminance. The luminance augmentation source has been taken from a different project, with changes to fit in my current solution, and has been linked in the respective code cell.
 
 My final training set had (34799 + 243593 = 278392) number of images. I did not augment my validation and test sets.
 
-Here is an example of an original image and an augmented image:
+Here is an example of a few luma-augmented images:
 
-![alt text][img1]
+![alt text](NoPassing-LumaAugment.png)
 
-![alt text][img1_augmented]
+![alt text](NoPassing-LumaAugment2.png)
+
+However, I was having issues with Matplotlib displaying my images, often resulting in
+colorful images like this:
+
+![alt text](NoPassing-LumaAugmentCorrupt.png)
 
 #### 3. Describe, and identify where in your code, what your final model architecture looks like including model type, layers, layer sizes, connectivity, etc.) Consider including a diagram and/or table describing the final model.
 
-My final model is a modification of the LeNet architecture, consisting of the following layers. I will include a graph as well.
+My final model is a modification of the LeNet architecture, consisting of the following layers.
 
-**TODO: GRAPH HERE.**
-
-| Layer         		|     Description	        					| 
+| Layer         		|     Description	        					|
 |:---------------------:|:---------------------------------------------:|
 | ## Input layer  ##	|												|
 | Input         		| 32x32x3 RGB image   							|
@@ -129,37 +124,23 @@ My final model is a modification of the LeNet architecture, consisting of the fo
 
 #### 4. Describe how, and identify where in your code, you trained your model. The discussion can include the type of optimizer, the batch size, number of epochs and any hyperparameters such as learning rate.
 
-**TODO: WRITE**
+The training code is included under the heading "Train, Validate and Test the Model", in the second
+cell. The first cell contains operation definitions that don't need to be rerun when training again.
 
-The training code is included in 
+I used an Adam optimizer for training, reducing the loss cross-validating a one-hot encoded label with the model's output. I used a batch size of 512 over 40 epochs, producing an acceptable accuracy of 96%.
 
-|						|												|
-|						|												|
-To train the model, I used an ....
+My learning rate is a constant 0.001, but I played around with exponential falloff. A single epoch
+ran for around 10 seconds on the Floyd GPU instance.
 
 #### 5. Describe the approach taken for finding a solution. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.
 
-**TODO: WRITE**
+For accuracy calculations, I define a function evaluate() in the first cell under the heading "Train, Validate and Test the Model". In the final model after training for 40 epochs, my training set loss was 0.106, validation accuracy was 0.961 (96.1%).
 
-The code for calculating the accuracy of the model is located in the ninth cell of the Ipython notebook.
+I started off using the LeNet model. We had discussed it in the lessons and it was a good convolutional neural net to base the classifier on.
 
-My final model results were:
-* training set accuracy of ?
-* validation set accuracy of ? 
-* test set accuracy of ?
+To run the traffic sign classifier, it needed a few modifications - namely in the shape of the output layer. It needed to output all 43 classes instead of the 10 for decimals. When running, I discovered it gave a low accuracy of 40% with decent hyperparameters, therefore it was obvious the model needed to be more complex to capture traffic signs.
 
-If an iterative approach was chosen:
-* What was the first architecture that was tried and why was it chosen?
-* What were some problems with the initial architecture?
-* How was the architecture adjusted and why was it adjusted? Typical adjustments could include choosing a different model architecture, adding or taking away layers (pooling, dropout, convolution, etc), using an activation function or changing the activation function. One common justification for adjusting an architecture would be due to over fitting or under fitting. A high accuracy on the training set but low accuracy on the validation set indicates over fitting; a low accuracy on both sets indicates under fitting.
-* Which parameters were tuned? How were they adjusted and why?
-* What are some of the important design choices and why were they chosen? For example, why might a convolution layer work well with this problem? How might a dropout layer help with creating a successful model?
-
-If a well known architecture was chosen:
-* What architecture was chosen?
-* Why did you believe it would be relevant to the traffic sign application?
-* How does the final model's accuracy on the training, validation and test set provide evidence that the model is working well?
- 
+I added another convolutional layer and increased the convolution's depth to allow it to learn about more features of the image. To make the model have a stronger "understanding" of the images, I applied some of the techniques learned in the lessons. I added layers of dropout and another fully connected layer. I adjusted the learning rate lower to increase the model's stability and ran it on a faster machine to allow it time to train.
 
 ### Test a Model on New Images
 
@@ -167,20 +148,26 @@ If a well known architecture was chosen:
 
 Here are five German traffic signs that I found on the web:
 
-![alt text][image4] ![alt text][image5] ![alt text][image6] 
-![alt text][image7] ![alt text][image8]
+![alt text](StopSign.png)
+![alt text](StopSignV2.png)
+![alt text](NoParkingLeft.png)
+![alt text](FrostHazard.png)
+![alt text](AlertSign.png)
 
-The first image might be difficult to classify because ...
+The Alert Sign showed the lowest confidence when training. I assume it's because of the
+plaque under it confusing the model's predictions based on shape.
 
 #### 2. Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. Identify where in your code predictions were made. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the "Stand Out Suggestions" part of the rubric).
 
-The code for making predictions on my final model is located in the tenth cell of the Ipython notebook.
+The prediction code is run under "Predict the Sign Type for Each Image", by running
+the same network with data loaded from file.
 
-Here are the results of the prediction:
+The predictions were made on each image and the results are shown below. The model has
+correct results and has very high confidence for each of the sign types.
 
-| Image			        |     Prediction	        					| 
-|:---------------------:|:---------------------------------------------:| 
-| Stop Sign      		| Stop sign   									| 
+| Image			        |     Prediction	        					|
+|:---------------------:|:---------------------------------------------:|
+| Stop Sign      		| Stop sign   									|
 | U-turn     			| U-turn 										|
 | Yield					| Yield											|
 | 100 km/h	      		| Bumpy Road					 				|
@@ -195,13 +182,13 @@ The code for making predictions on my final model is located in the 11th cell of
 
 For the first image, the model is relatively sure that this is a stop sign (probability of 0.6), and the image does contain a stop sign. The top five soft max probabilities were
 
-| Probability         	|     Prediction	        					| 
-|:---------------------:|:---------------------------------------------:| 
-| .60         			| Stop sign   									| 
+| Probability         	|     Prediction	        					|
+|:---------------------:|:---------------------------------------------:|
+| .60         			| Stop sign   									|
 | .20     				| U-turn 										|
 | .05					| Yield											|
 | .04	      			| Bumpy Road					 				|
 | .01				    | Slippery Road      							|
 
 
-For the second image ... 
+For the second image ...
